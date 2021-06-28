@@ -111,7 +111,7 @@ figure ('Name','Range from First FFT')
  % plot FFT output 
 subplot(2,1,1)
 plot(P1)
-title('Single-Sided Amplitude Spectrum of f(t)')
+title('1D Range FFT')
 xlabel('Range Measurement')
 ylabel('|P1(f)|')
 axis ([0 200 0 1]);
@@ -119,7 +119,9 @@ axis ([0 200 0 1]);
 subplot(2,1,2)
 plot(t(1:Nr),Mix_resh(:,1));
 ylabel('f')
-xlabel('t (s)')
+xlabel('t(s)')
+
+saveas(gcf,'range_FFT.png')
 
 
 %% RANGE DOPPLER RESPONSE
@@ -135,6 +137,14 @@ xlabel('t (s)')
 % to range and doppler based on their Max values.
 
 Mix=reshape(Mix,[Nr,Nd]);
+figure,surf(Mix,'linestyle', 'none');
+colorbar;
+xlabel('chirp #')
+ylabel('sample #')
+title('IF Signal');
+
+saveas(gcf,'IF_signal.png')
+
 
 % 2D FFT using the FFT size for both dimensions.
 sig_fft2 = fft2(Mix,Nr,Nd);
@@ -147,9 +157,16 @@ RDM = 10*log10(RDM) ;
 
 %use the surf function to plot the output of 2DFFT and to show axis in both
 %dimensions
+
 doppler_axis = linspace(-100,100,Nd);
 range_axis = linspace(-200,200,Nr/2)*((Nr/2)/400);
-figure,surf(doppler_axis,range_axis,RDM);
+figure,surf(doppler_axis,range_axis,RDM,'linestyle', 'none');
+colorbar;
+xlabel('velocity estimate (m/s)')
+ylabel('range estimate (m)')
+title('Range-Doppler FFT Output');
+
+saveas(gcf,'RD_FFT.png')
 
 %% CFAR implementation
 
@@ -232,8 +249,9 @@ colorbar;
 view(0,-90)
 xlabel('velocity estimate (m/s)')
 ylabel('range estimate (m)')
+title('Range-Doppler CA-CFAR Output');
 
-
+saveas(gcf,'CACFAR.png')
 
 function ydB = pow2db(y)
 %POW2DB   Power to dB conversion
